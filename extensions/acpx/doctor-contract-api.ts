@@ -5,7 +5,7 @@ import type { PluginDoctorStateMigration } from "openclaw/plugin-sdk/runtime-doc
 import {
   normalizeAcpxProcessLease,
   normalizeAcpxProcessLeaseFile,
-  openAcpxProcessLeaseStateStore,
+  createAcpxProcessLeaseStore,
   type AcpxProcessLease,
 } from "./src/process-lease.js";
 import {
@@ -110,7 +110,7 @@ export const stateMigrations: PluginDoctorStateMigration[] = [
       const gatewayInstanceId = await readLegacyGatewayInstanceId(gatewayInstancePath);
       const processLeasePath = resolveLegacyProcessLeasePath(params.stateDir);
       const openLeases = await readLegacyOpenProcessLeases(processLeasePath);
-      const processLeaseStore = openAcpxProcessLeaseStateStore(
+      const processLeaseStore = createAcpxProcessLeaseStore(
         params.context.openPluginStateKeyedStore,
       );
       const gatewayStore = params.context.openPluginStateKeyedStore<AcpxGatewayInstanceRecord>({

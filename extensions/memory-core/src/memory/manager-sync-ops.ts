@@ -29,7 +29,7 @@ import {
   listMemoryFiles,
   loadSqliteVecExtension,
   normalizeExtraMemoryPaths,
-  retryTransientMemoryRead,
+  // retryTransientMemoryRead,
   runWithConcurrency,
   type MemorySource,
   type MemorySyncProgressUpdate,
@@ -73,6 +73,7 @@ import {
   markMemoryTargetSessionFilesDirty,
   runMemoryTargetedSessionSync,
 } from "./manager-targeted-sync.js";
+import { retryTransientMemoryRead } from "./retry-helper.js";
 import {
   recordMemoryWatchEventPath,
   settleMemoryWatchEventPaths,

@@ -1,14 +1,14 @@
 // Memory Core doctor contract migrates shipped workspace dreaming state.
 import fs from "node:fs/promises";
 import path from "node:path";
+import {
+  SHORT_TERM_PHASE_SIGNAL_RELATIVE_PATH,
+  SHORT_TERM_STORE_RELATIVE_PATH,
+  normalizeShortTermPhaseSignalStore,
+  normalizeShortTermRecallStore,
+} from " ./src/fix-all-exports.ts";
 import { resolveMemoryDreamingWorkspaces } from "openclaw/plugin-sdk/memory-core-host-status";
 import type { PluginDoctorStateMigration } from "openclaw/plugin-sdk/runtime-doctor";
-import {
-  DAILY_INGESTION_STATE_RELATIVE_PATH,
-  SESSION_INGESTION_STATE_RELATIVE_PATH,
-  normalizeDailyIngestionState,
-  normalizeSessionIngestionState,
-} from "./src/dreaming-phases.js";
 import {
   DREAMING_DAILY_INGESTION_NAMESPACE,
   DREAMING_SESSION_INGESTION_FILES_NAMESPACE,
@@ -23,12 +23,11 @@ import {
   writeMemoryCoreWorkspaceEntry,
 } from "./src/dreaming-state.js";
 import {
-  SHORT_TERM_PHASE_SIGNAL_RELATIVE_PATH,
-  SHORT_TERM_STORE_RELATIVE_PATH,
-  normalizeShortTermPhaseSignalStore,
-  normalizeShortTermRecallStore,
-} from "./src/short-term-promotion.js";
-
+  // // // //   DAILY_INGESTION_STATE_RELATIVE_PATH,
+  // // //   SESSION_INGESTION_STATE_RELATIVE_PATH,
+  normalizeDailyIngestionState,
+  normalizeSessionIngestionState,
+} from "./src/module-bridge";
 type LegacySource = {
   workspaceDir: string;
   label: string;
@@ -85,8 +84,8 @@ async function collectLegacySources(
   const sources: LegacySource[] = [];
   for (const workspaceDir of resolveConfiguredWorkspaces(config, env)) {
     const candidates = [
-      { label: "daily ingestion", relativePath: DAILY_INGESTION_STATE_RELATIVE_PATH },
-      { label: "session ingestion", relativePath: SESSION_INGESTION_STATE_RELATIVE_PATH },
+      // // // //       { label: "daily ingestion", relativePath: DAILY_INGESTION_STATE_RELATIVE_PATH },
+      // // //       { label: "session ingestion", relativePath: SESSION_INGESTION_STATE_RELATIVE_PATH },
       { label: "short-term recall", relativePath: SHORT_TERM_STORE_RELATIVE_PATH },
       { label: "phase signals", relativePath: SHORT_TERM_PHASE_SIGNAL_RELATIVE_PATH },
     ];

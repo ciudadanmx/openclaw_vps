@@ -61,6 +61,7 @@ minimumReleaseAgeExclude:
   - "sqlite-vec-*"
   - "rastermill"
   - "clawpdf"
+  - '@openclaw/fs-safe@0.4.0'
 
 nodeLinker: hoisted
 blockExoticSubdeps: true

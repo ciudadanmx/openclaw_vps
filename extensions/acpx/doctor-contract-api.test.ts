@@ -12,7 +12,7 @@ import type {
 } from "openclaw/plugin-sdk/runtime-doctor";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { stateMigrations } from "./doctor-contract-api.js";
-import { openAcpxProcessLeaseStateStore, type AcpxProcessLease } from "./src/process-lease.js";
+import { createAcpxProcessLeaseStore, type AcpxProcessLease } from "./src/process-lease.js";
 import {
   ACPX_GATEWAY_INSTANCE_KEY,
   ACPX_GATEWAY_INSTANCE_MAX_ENTRIES,
@@ -119,12 +119,12 @@ describe("acpx doctor state migration", () => {
         .lookup(ACPX_GATEWAY_INSTANCE_KEY),
     ).resolves.toMatchObject({ instanceId: "gw-test" });
     await expect(
-      openAcpxProcessLeaseStateStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
+      createAcpxProcessLeaseStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
         "lease-1",
       ),
     ).resolves.toEqual(lease);
     await expect(
-      openAcpxProcessLeaseStateStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
+      createAcpxProcessLeaseStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
         "closed-lease",
       ),
     ).resolves.toBeUndefined();
@@ -198,19 +198,20 @@ describe("acpx doctor state migration", () => {
         instanceId: "current-gw",
         createdAt: 2,
       });
-    await openAcpxProcessLeaseStateStore(
-      createDoctorContext(env).openPluginStateKeyedStore,
-    ).register("current-lease", {
-      leaseId: "current-lease",
-      gatewayInstanceId: "current-gw",
-      sessionKey: "agent:codex:acp:current",
-      wrapperRoot: path.join(stateDir, "acpx"),
-      wrapperPath: path.join(stateDir, "acpx", "codex-acp-wrapper.mjs"),
-      rootPid: 202,
-      commandHash: "hash-current",
-      startedAt: 2,
-      state: "open",
-    });
+    await createAcpxProcessLeaseStore(createDoctorContext(env).openPluginStateKeyedStore).register(
+      "current-lease",
+      {
+        leaseId: "current-lease",
+        gatewayInstanceId: "current-gw",
+        sessionKey: "agent:codex:acp:current",
+        wrapperRoot: path.join(stateDir, "acpx"),
+        wrapperPath: path.join(stateDir, "acpx", "codex-acp-wrapper.mjs"),
+        rootPid: 202,
+        commandHash: "hash-current",
+        startedAt: 2,
+        state: "open",
+      },
+    );
 
     const result = await stateMigrations[0].migrateLegacyState(migrationParams());
 
@@ -221,7 +222,7 @@ describe("acpx doctor state migration", () => {
     await expect(fs.access(gatewayPath)).resolves.toBeUndefined();
     await expect(fs.access(leasePath)).resolves.toBeUndefined();
     await expect(
-      openAcpxProcessLeaseStateStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
+      createAcpxProcessLeaseStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
         "lease-1",
       ),
     ).resolves.toBeUndefined();
@@ -272,7 +273,7 @@ describe("acpx doctor state migration", () => {
         .lookup(ACPX_GATEWAY_INSTANCE_KEY),
     ).resolves.toMatchObject({ instanceId: "legacy-gw" });
     await expect(
-      openAcpxProcessLeaseStateStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
+      createAcpxProcessLeaseStore(createDoctorContext(env).openPluginStateKeyedStore).lookup(
         "legacy-lease",
       ),
     ).resolves.toEqual(legacyLease);

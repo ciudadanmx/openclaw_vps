@@ -1,4 +1,3 @@
-import fs from "node:fs/promises";
 import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
 import {
   enforceEmbeddingMaxInputTokens,
@@ -12,7 +11,7 @@ import {
   chunkMarkdown,
   hashText,
   remapChunkLines,
-  retryTransientMemoryRead,
+  //retryTransientMemoryRead,
   type MemoryChunk,
   type MemorySource,
 } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
@@ -42,6 +41,7 @@ import { deleteMemoryFtsRows } from "./manager-fts-state.js";
 import { MemoryManagerSyncOps } from "./manager-sync-ops.js";
 import { logMemoryVectorDegradedWrite } from "./manager-vector-warning.js";
 import { replaceMemoryVectorRow } from "./manager-vector-write.js";
+import { retryTransientMemoryRead } from "./retry-helper";
 
 const VECTOR_TABLE = "chunks_vec";
 const FTS_TABLE = "chunks_fts";
